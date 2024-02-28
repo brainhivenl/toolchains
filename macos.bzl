@@ -36,7 +36,7 @@ def _create_config_impl(ctx):
         host_system_name = "local",
         target_system_name = ctx.attr.target,
         target_cpu = ctx.attr.cpu,
-        target_libc = "gnu",
+        target_libc = ctx.attr.libc,
         compiler = "gcc",
         abi_version = "unknown",
         abi_libc_version = "unknown",
@@ -81,16 +81,17 @@ def _create_config_impl(ctx):
         ],
     )
 
-def macos_cross_toolchain(name, target, cpu, bin_prefix):
+def macos_cross_toolchain(name, cpu, bin_prefix, libc):
     _create_config(
-        name = "{}_config".format(target),
+        name = "{}_config".format(name),
+        libc = libc,
         cpu = cpu,
         bin_prefix = bin_prefix,
-        target = target,
+        target = name,
     )
 
     native.cc_toolchain(
-        name = target,
+        name = "cc_{}".format(name),
         all_files = ":empty",
         compiler_files = ":empty",
         dwp_files = ":empty",
@@ -98,21 +99,20 @@ def macos_cross_toolchain(name, target, cpu, bin_prefix):
         objcopy_files = ":empty",
         strip_files = ":empty",
         supports_param_files = 0,
-        toolchain_config = ":{}_config".format(target),
-        toolchain_identifier = "aarch64-toolchain",
+        toolchain_config = ":{}_config".format(name),
+        toolchain_identifier = "{}-toolchain".format(name),
     )
 
     native.toolchain(
-        name = "toolchain",
+        name = name,
         exec_compatible_with = [
             "@platforms//os:macos",
-            #"@platforms//cpu:aarch64",
         ],
         target_compatible_with = [
             "@platforms//os:linux",
             "@platforms//cpu:{}".format(cpu),
         ],
-        toolchain = ":{}".format(target),
+        toolchain = ":cc_{}".format(name),
         toolchain_type = "@bazel_tools//tools/cpp:toolchain_type",
         visibility = ["//visibility:public"],
     )
@@ -122,6 +122,7 @@ _create_config = rule(
     attrs = {
         "cpu": attr.string(mandatory = True),
         "bin_prefix": attr.string(mandatory = True),
+        "libc": attr.string(mandatory = True),
         "target": attr.string(mandatory = True),
     },
     provides = [CcToolchainConfigInfo],
