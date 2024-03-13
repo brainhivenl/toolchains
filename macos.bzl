@@ -48,45 +48,44 @@ def _create_config_impl(ctx):
         tool_paths = [
             tool_path(
                 name = "ld",
-                path = "/opt/homebrew/bin/{}-ld".format(ctx.attr.bin_prefix),
+                path = "/opt/homebrew/bin/{}-ld".format(ctx.attr.target),
             ),
             tool_path(
                 name = "ar",
-                path = "/opt/homebrew/bin/{}-ar".format(ctx.attr.bin_prefix),
+                path = "/opt/homebrew/bin/{}-ar".format(ctx.attr.target),
             ),
             tool_path(
                 name = "cpp",
-                path = "/opt/homebrew/bin/{}-cpp".format(ctx.attr.bin_prefix),
+                path = "/opt/homebrew/bin/{}-cpp".format(ctx.attr.target),
             ),
             tool_path(
                 name = "gcc",
-                path = "/opt/homebrew/bin/{}-gcc".format(ctx.attr.bin_prefix),
+                path = "/opt/homebrew/bin/{}-gcc".format(ctx.attr.target),
             ),
             tool_path(
                 name = "gcov",
-                path = "/opt/homebrew/bin/{}-gcov".format(ctx.attr.bin_prefix),
+                path = "/opt/homebrew/bin/{}-gcov".format(ctx.attr.target),
             ),
             tool_path(
                 name = "nm",
-                path = "/opt/homebrew/bin/{}-nm".format(ctx.attr.bin_prefix),
+                path = "/opt/homebrew/bin/{}-nm".format(ctx.attr.target),
             ),
             tool_path(
                 name = "objdump",
-                path = "/opt/homebrew/bin/{}-objdump".format(ctx.attr.bin_prefix),
+                path = "/opt/homebrew/bin/{}-objdump".format(ctx.attr.target),
             ),
             tool_path(
                 name = "strip",
-                path = "/opt/homebrew/bin/{}-strip".format(ctx.attr.bin_prefix),
+                path = "/opt/homebrew/bin/{}-strip".format(ctx.attr.target),
             ),
         ],
     )
 
-def macos_cross_toolchain(name, cpu, bin_prefix, libc):
+def macos_cross_toolchain(name, cpu, libc):
     _create_config(
         name = "{}_config".format(name),
         libc = libc,
         cpu = cpu,
-        bin_prefix = bin_prefix,
         target = name,
     )
 
@@ -121,7 +120,6 @@ _create_config = rule(
     implementation = _create_config_impl,
     attrs = {
         "cpu": attr.string(mandatory = True),
-        "bin_prefix": attr.string(mandatory = True),
         "libc": attr.string(mandatory = True),
         "target": attr.string(mandatory = True),
     },
