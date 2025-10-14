@@ -41,9 +41,9 @@ def _create_config_impl(ctx):
         abi_version = "unknown",
         abi_libc_version = "unknown",
         cxx_builtin_include_directories = [
-            "/opt/homebrew/Cellar/{}/11.2.0_1/toolchain/{}/include/".format(ctx.attr.target, ctx.attr.target),
-            "/opt/homebrew/Cellar/{}/11.2.0_1/toolchain/{}/sysroot/".format(ctx.attr.target, ctx.attr.target),
-            "/opt/homebrew/Cellar/{}/11.2.0_1/toolchain/lib/gcc/{}/11.2.0/include/".format(ctx.attr.target, ctx.attr.target),
+            "/opt/homebrew/Cellar/{}/13.3.0/toolchain/{}/include/".format(ctx.attr.target, ctx.attr.target),
+            "/opt/homebrew/Cellar/{}/13.3.0/toolchain/{}/sysroot/".format(ctx.attr.target, ctx.attr.target),
+            "/opt/homebrew/Cellar/{}/13.3.0/toolchain/lib/gcc/{}/13.3.0/include/".format(ctx.attr.target, ctx.attr.target),
         ],
         tool_paths = [
             tool_path(
